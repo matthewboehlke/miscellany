@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Facades\CampaignLocalization;
+use App\Facades\FormCopy;
 use App\Http\Requests\StoreNote;
+use App\Models\Entity;
 use App\Models\Campaign;
 use App\Models\MiscModel;
 use App\Services\EntityService;
@@ -17,6 +19,9 @@ class EntityCreatorController extends Controller
      */
     protected $entityService;
 
+    /** @var Campaign $campaign */
+    protected $campaign;
+
     /**
      * Create a new controller instance.
      *
@@ -27,6 +32,8 @@ class EntityCreatorController extends Controller
         $this->middleware('auth');
         $this->middleware('campaign.member');
         $this->entityService = $entityService;
+
+        $this->campaign = CampaignLocalization::getCampaign();
     }
 
     /**
@@ -34,9 +41,9 @@ class EntityCreatorController extends Controller
      */
     public function selection()
     {
-        $entities = $this->availableEntities();
         return view('entities.creator.selection', [
-            'entities' => $entities
+            'entities' => $this->availableEntities(),
+            'templates' => $this->entityService->templates()
         ]);
     }
 
@@ -55,6 +62,31 @@ class EntityCreatorController extends Controller
             'type' => $type,
             'singularType' => Str::singular($type),
             'source' => null,
+        ]);
+    }
+
+    /**
+     * @param $template
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    public function template($template)
+    {
+        // Get the template
+        /** @var Entity $template */
+        $template = Entity::where('is_template', true)->where('id', $template)->firstOrFail();
+        $type = $template->pluralType();
+
+        // Make sure the user is allowed to create this kind of entity
+        $model = $this->entityService->getClass($type);
+        $this->authorize('create', $model);
+
+        FormCopy::source($template->child);
+
+        return view('entities.creator.form', [
+            'type' => $type,
+            'source' => $template,
+            'singularType' => Str::singular($type),
         ]);
     }
 
@@ -81,6 +113,16 @@ class EntityCreatorController extends Controller
             $values['entry'] = '';
         }
 
+        // Hook the source if using a template
+        if (request()->has('source')) {
+            /** @var Entity $template */
+            $template = Entity::where('is_template', true)
+                ->where('id', request()->post('source'))
+                ->firstOrFail();
+
+            // Add values not available through the quick creator interface
+        }
+
         /** @var MiscModel $model */
         $model = new $class;
         $new = $model->create($values);
@@ -99,16 +141,13 @@ class EntityCreatorController extends Controller
      */
     protected function availableEntities(): array
     {
-
         $entities = [];
-        /** @var Campaign $campaign */
-        $campaign = CampaignLocalization::getCampaign();
 
         // Loop through the entities, check those enabled in the campaign, and where the user has create access.
         foreach ($this->entityService->entities([
             'calendars', 'conversations', 'tags', 'dice_rolls', 'menu_links'
         ]) as $name => $class) {
-            if ($campaign->enabled($name)) {
+            if ($this->campaign->enabled($name)) {
                 if (auth()->user()->can('create', $class)) {
                     $entities[$name] = $class;
                 }

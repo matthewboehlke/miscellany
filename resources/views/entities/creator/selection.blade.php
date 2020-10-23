@@ -2,7 +2,7 @@
     <div id="entity-creator-selection">
         <div class="panel-heading">
             <button type="button" class="close" data-dismiss="modal" aria-label="{{ trans('crud.delete_modal.close') }}"><span aria-hidden="true">&times;</span></button>
-            <h4>{{ trans('entities.creator.title') }}</h4>
+            <h3 class="panel-title">{{ trans('entities.creator.title') }}</h3>
         </div>
         <div class="panel-body">
             <p class="alert alert-success entity-creator-success" style="display: none"></p>
@@ -123,6 +123,22 @@
                     </a>
                 </div>
             </div>
+
+
+            @if (!empty($templates))
+                <hr />
+                <p class="help-block">{{ __('entities.creator.templates') }}</p>
+
+                <div class="row entity-creator-templates">
+                    @foreach ($templates as $template)
+                        <div class="col-sm-4">
+                            <a href="#" data-toggle="entity-creator" data-url="{{ route('entity-creator.template', ['template' => $template->id]) }}">
+                                {{ $template->name }}
+                            </a>
+                        </div>
+                    @endforeach
+                </div>
+            @endif
         </div>
     </div>
     <div class="entity-creator-loader hidden panel-body">

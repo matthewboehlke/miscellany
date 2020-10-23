@@ -395,6 +395,7 @@ Route::group([
         Route::get('/entity-creator', [\App\Http\Controllers\EntityCreatorController::class, 'selection'])->name('entity-creator.selection');
         Route::get('/entity-creator/{type}', [\App\Http\Controllers\EntityCreatorController::class, 'form'])->name('entity-creator.form');
         Route::post('/entity-creator/{type}', [\App\Http\Controllers\EntityCreatorController::class, 'store'])->name('entity-creator.store');
+        Route::get('/entity-creator/template/{template}', [\App\Http\Controllers\EntityCreatorController::class, 'template'])->name('entity-creator.template');
     });
 
     // Notification

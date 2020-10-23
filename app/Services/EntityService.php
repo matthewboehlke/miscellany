@@ -18,6 +18,7 @@ use App\Models\OrganisationMember;
 use App\Models\Race;
 use App\Models\Timeline;
 use App\Models\TimelineEra;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -561,5 +562,18 @@ class EntityService
         $model->save();
 
         return $model;
+    }
+
+    /**
+     * @param string|null $type
+     * @return array
+     */
+    public function templates(string $type = null)
+    {
+        if (!auth()->check() || !auth()->user()->isAdmin()) {
+            return [];
+        }
+
+        return Entity::templates($type)->get();
     }
 }

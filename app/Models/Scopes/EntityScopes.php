@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
  * @method static self|Builder unmentioned()
  * @method static self type(string $type)
  * @method static self|Builder inTags(array $tags)
- * @method static self|Builder templates(string $entityType)
+ * @method static self|Builder templates(string $entityType = null)
  */
 trait EntityScopes
 {
@@ -100,13 +100,17 @@ trait EntityScopes
 
     /**
      * @param Builder $query
-     * @param string $entityType
+     * @param string|null $entityType
      * @return Builder
      */
-    public function scopeTemplates(Builder $query, string $entityType)
+    public function scopeTemplates(Builder $query, string $entityType = null)
     {
+        if (!empty($entityType)) {
+            $query
+                ->where('type', $entityType);
+        }
+
         return $query
-            ->where('type', $entityType)
             ->where('is_template', 1);
     }
 }
