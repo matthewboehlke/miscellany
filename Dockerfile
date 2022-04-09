@@ -36,7 +36,8 @@ RUN groupadd -g 999 deploy \
     && chmod 777 /etc/authbind/byport/443 \ 
     && chmod -R 770 /var/log/apache2 \
     && chgrp -R www-data /var/log/apache2 \
-    && chown -R deploy:www-data /var/www/html/* /var/www/html/.*
+    && chown -R deploy:www-data /var/www/html/* /var/www/html/.* \ 
+    && chmod 777 /usr/local/bin/run.sh
 
 USER deploy
 WORKDIR /var/www/html
