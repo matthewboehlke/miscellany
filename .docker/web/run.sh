@@ -8,8 +8,8 @@ step() {
     printf "$1\n"
 }
 
-step "Wait for database up"
-wait-for database:3306
+# step "Wait for database up"
+# wait-for database:3306
 
 # step "composer install"
 # cd /var/www/html && composer install
