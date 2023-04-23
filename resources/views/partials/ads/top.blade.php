@@ -1,3 +1,14 @@
+@nativeAd(\App\Models\Ad::SECTION_BANNER)
+<div class="ads-space nativead-manager" data-video="true" style="max-height: 228px;">
+    {!! \App\Facades\AdCache::show() !!}
+</div>
+<p class="text-center text-muted">
+    {!! __('misc.ads.remove_v2', [
+'supporting' => link_to_route('settings.subscription', __('misc.ads.supporting'), [], ['target' => '_blank']),
+'boosting' => link_to_route('front.pricing', __('misc.ads.boosting'), ['#boost'], ['target' => '_blank']),
+]) !!}
+</p>
+@else
 @ads('entity')
 <div class="ads-space">
     <ins class="adsbygoogle"
@@ -11,4 +22,11 @@
         (adsbygoogle = window.adsbygoogle || []).push({});
     </script>
 </div>
+<p class="text-center text-muted">
+    {!! __('misc.ads.remove_v2', [
+'supporting' => link_to_route('settings.subscription', __('misc.ads.supporting'), [], ['target' => '_blank']),
+'boosting' => link_to_route('front.pricing', __('misc.ads.boosting'), ['#boost'], ['target' => '_blank']),
+]) !!}
+</p>
 @endads
+@endnativeAd

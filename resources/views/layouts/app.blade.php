@@ -90,6 +90,7 @@ $seoTitle = isset($seoTitle) ? $seoTitle : (isset($title) ? $title : null);
         @yield('fullpage-form')
 
         <div class="content-wrapper" id="{{ isset($contentId) ? $contentId : "main-content" }}">
+            @include('layouts.banner')
 
             @if(!view()->hasSection('content-header'))
             <section class="content-header">
@@ -128,15 +129,6 @@ $seoTitle = isset($seoTitle) ? $seoTitle : (isset($title) ? $title : null);
                     </div>
                 @endif
                 @include('partials.success')
-
-@if(!empty(config('tracking.adsense')) && (auth()->guest() || auth()->user()->showAds()) && !isset($skipBannerAd) && (!isset($sidebar) || $sidebar != 'settings'))
-                <p class="text-center text-muted">
-                    {!! __('misc.ads.remove_v2', [
-    'supporting' => link_to_route('settings.subscription', __('misc.ads.supporting'), [], ['target' => '_blank']),
-    'boosting' => link_to_route('front.pricing', __('misc.ads.boosting'), ['#boost'], ['target' => '_blank']),
-    ]) !!}
-                </p>
-@endif
 
                 @yield('entity-actions')
                 @yield('entity-header')

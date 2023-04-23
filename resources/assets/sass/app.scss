@@ -519,6 +519,9 @@ td.breakable {
   display: block;
   line-height: 20px !important;
 }
+.btn-box-tool .fa-ellipsis-v {
+  padding: 0 7px;
+}
 
 .menu-link-selector {
   .btn-app > .badge {
@@ -543,7 +546,7 @@ td.breakable {
 summary { display: list-item; }
 
 // RPG awesome dropdown icon margin
-.dropdown-menu > li > a > .ra, .dropdown-menu > li > a > .fa-regular, .dropdown-menu > li > a > .fa-solid {
+.dropdown-menu > li > a > :is(.fas, .fab, .far, .ra, .fa-solid, .fa-light, .fa-thin, .fa-regular) {
   margin-right: 10px;
 }
 
@@ -607,6 +610,7 @@ summary { display: list-item; }
 /** Toast **/
 :root {
   --toast-background: #00a65a;
+  --toast-background-error: #d73925;
   --toast-text: white;
 }
 .toast-container {
@@ -614,10 +618,10 @@ summary { display: list-item; }
   bottom: 20px;
   max-height: 100%;
   right: 20px;
-  overflow-y:scroll;
+  overflow-y:auto;
   overflow-x:hidden;
 
-  .toast-success {
+  .toast-success, .toast-error {
     margin-top: 10px;
     text-align: right;
     .toast-message {
@@ -631,6 +635,9 @@ summary { display: list-item; }
         margin-left: 5px;
       }
     }
+  }
+  .toast-error .toast-message {
+    background-color: var(--toast-background-error);
   }
 }
 
@@ -688,5 +695,6 @@ summary { display: list-item; }
 @import "editor";
 @import "conversation";
 @import "ads";
-@import "koinks";
+@import "campaign";
+@import "attributes/attributes";
 

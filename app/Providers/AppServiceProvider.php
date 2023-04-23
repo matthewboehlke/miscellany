@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Facades\AdCache;
 use App\Facades\CampaignLocalization;
 use App\Facades\EntityPermission;
 use App\Facades\Img;
 use App\Models\Ability;
+use App\Models\Ad;
 use App\Models\AppRelease;
 use App\Models\CalendarWeather;
 use App\Models\Campaign;
@@ -140,6 +142,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Model observers. Lots of magic.
         Ability::observe('App\Observers\AbilityObserver');
+        Ad::observe('App\Observers\AdObserver');
         AttributeTemplate::observe('App\Observers\AttributeTemplateObserver');
         AppRelease::observe('App\Observers\AppReleaseObserver');
         Calendar::observe(CalendarObserver::class);
@@ -262,6 +265,38 @@ class AppServiceProvider extends ServiceProvider
 
             // Always show ads to unlogged users
             if (!auth()->check()) {
+                return true;
+            }
+
+            // Subscribed users don't have ads
+            if (auth()->user()->isPatron()) {
+                return false;
+            }
+
+            // User has been created less than 24 hours ago
+            if (auth()->user()->created_at->diffInHours(Carbon::now()) < 24) {
+                return false;
+            }
+
+            // Boosted campaigns don't either have ads displayed to their members
+            $campaign = CampaignLocalization::getCampaign(false);
+            return !empty($campaign) && !$campaign->boosted();
+        });
+
+        Blade::if('nativeAd', function (int $section) {
+            // If we provided an ad test, override that
+            if (request()->has('_adtest') && auth()->user()->hasRole('admin')) {
+                return AdCache::test($section, request()->get('_adtest'));
+            }
+            if (!AdCache::has($section)) {
+                return false;
+            }
+            // Always show ads to unlogged users
+            if (!auth()->check()) {
+                return true;
+            }
+
+            if (request()->get('_boost') === '0') {
                 return true;
             }
 

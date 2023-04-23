@@ -34,7 +34,7 @@ $sizeOptions = [
         </li>
         <li role="presentation" @if($activeTab == 3) class="active" @endif>
             <a href="#marker-circle" data-nohash="true"  data-toggle="tooltip" class="text-center" title="{{ __('maps/markers.tabs.circle') }}">
-                <i class="fa fa-2x fa-circle-o"></i><br />
+                <i class="fa-regular fa-2x fa-circle"></i><br />
                 {{ __('maps/markers.tabs.circle') }}
             </a>
         </li>
@@ -60,7 +60,7 @@ $sizeOptions = [
                         <label>{{ __('maps/markers.fields.custom_icon') }}</label>
                         @if ($campaign->campaign()->boosted())
                             {!! Form::text('custom_icon', \App\Facades\FormCopy::field('custom_icon')->string(), ['class' => 'form-control', 'placeholder' => '<i class="fa fa-gem"></i>, <i class="ra ra-sword">']) !!}
-                            <p class="help-block">{!! __('maps/markers.helpers.custom_icon', ['rpgawesome' => '<a href="https://nagoshiashumari.github.io/Rpg-Awesome/" target="_blank">RPG Awesome</a>', 'fontawesome' => '<a href="https://fontawesome.com/icons?d=gallery" target="_blank">Font Awesome</a>']) !!}</p>
+                            <p class="help-block">{!! __('maps/markers.helpers.custom_icon', ['rpgawesome' => '<a href="https://nagoshiashumari.github.io/Rpg-Awesome/" target="_blank">RPG Awesome</a>', 'fontawesome' => '<a href="https://fontawesome.com/search?m=free&s=solid" target="_blank">Font Awesome</a>']) !!}</p>
                         @else
                             <p class="help-block">{{ __('crud.errors.boosted') }}</p>
                         @endif
